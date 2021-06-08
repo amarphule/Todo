@@ -1,24 +1,56 @@
 import React, { useState } from 'react'
 import "./App.css";
+import TodoLists from './TodoLists';
 
 function App() {
 
   const [task, setTask] = useState("")
+  const [lists, setLists] = useState([])
+
   const handleChange = (e) => {
     setTask(e.target.value)
   }
 
-  return (
-    <div className="app">
-      <h1>Add Task</h1>
-      <input type="text" name="task" id="task"
-        onChange={handleChange}
-      />
-      <button type="submit">Add</button>
+  const handleClick = () => {
+    setLists((oldItems) => {
+      return [...oldItems, task]
+    })
+    setTask("")
+  }
+  const deleteItem = (id) => {
+    setLists((oldItems) => {
+      return oldItems.filter((arrElem, index) => {
+        return index !== id
+      })
+    })
+  }
 
-      {/* Task lists */}
-      <div className="list">
-        {task}
+  return (
+    <div className="mainContainer">
+      <div className="app">
+        <br />
+        <h1>Add Tasks</h1>
+        <br />
+        <input type="text" name="task"
+          value={task}
+          placeholder="Add Task here..."
+          onChange={handleChange} id="task" />
+        <button type="submit" onClick={handleClick}>+</button>
+
+        {/* Task lists */}
+        <div className="list">
+          <ol>
+            {lists.map((item, index) => {
+              return (
+                <TodoLists
+                  key={index}
+                  text={item}
+                  id={index}
+                  deleteItem={deleteItem} />
+              )
+            })}
+          </ol>
+        </div>
       </div>
     </div>
   );
